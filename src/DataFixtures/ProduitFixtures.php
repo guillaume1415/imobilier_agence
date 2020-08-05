@@ -26,7 +26,9 @@ class ProduitFixtures extends Fixture
                 ->setCity($faker->city)
                 ->setAdress($faker->address)
                 ->setPostalCode($faker->postcode)
-                ->setSold(false);
+                ->setSold(false)
+                ->setUpdatedAt($faker->dateTimeBetween('-1 week'));
+
             $manager->persist($property);
         }
 

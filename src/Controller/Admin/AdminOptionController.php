@@ -17,6 +17,8 @@ class AdminOptionController extends AbstractController
 {
     /**
      * @Route("/", name="admin.option.index", methods={"GET"})
+     * @param OptionRepository $optionRepository
+     * @return Response
      */
     public function index(OptionRepository $optionRepository): Response
     {
@@ -27,6 +29,8 @@ class AdminOptionController extends AbstractController
 
     /**
      * @Route("/new", name="admin.option.new", methods={"GET","POST"})
+     * @param Request $request
+     * @return Response
      */
     public function new(Request $request): Response
     {

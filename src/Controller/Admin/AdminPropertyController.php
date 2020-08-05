@@ -6,6 +6,7 @@ use App\Entity\Property;
 use App\Form\PropertyType;
 use App\Repository\PropertyRepository;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use \Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,17 +21,16 @@ class AdminPropertyController extends AbstractController{
     private $repository;
 
     /**
-     * @var ObjectManager
+     * @var EntityManagerInterface
      */
     private $em;
-//,ObjectManager $em
 
-    public function __construct(PropertyRepository $repository)
+
+    public function __construct(PropertyRepository $repository,EntityManagerInterface $em)
     {
         $this->repository = $repository;
+        $this->em = $em;
 
-
-        //$this->em = $em;
     }
 
     /**
@@ -61,6 +61,7 @@ class AdminPropertyController extends AbstractController{
         }
         return $this->render('admin/Property/new.html.twig',[
             'property' => $property,
+            'current_menu' => 'admin',
             'form' => $form->createView()
         ]);
     }
@@ -83,6 +84,7 @@ class AdminPropertyController extends AbstractController{
         }
         return $this->render('admin/Property/edit.html.twig',[
             'property' => $property,
+            'current_menu' => 'admin',
             'form' => $form->createView()
         ]);
     }
@@ -99,8 +101,6 @@ class AdminPropertyController extends AbstractController{
             $this->em->flush();
             $this->addFlash('success','supprimé avec succès');
         }
-        //$this->em->remove($property);
-        //$this->em->flush();
 
         return $this->redirectToRoute('admin.property.index');
     }

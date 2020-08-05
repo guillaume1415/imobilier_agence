@@ -64,12 +64,12 @@ class PropertyController extends AbstractController
      * @return Response
      */
     public function show(Property $property, string $slug, $id):response{
-       /* if ($property->getSlug()  !== $slug){
-            return  $this->redirectToRoute('property.show',[
-                'id' =>$property->getId(),
-                'slug' =>$property->getSlug(),
-            ],301);
-        }*/
+        if ($property->getSlug() !== $slug) {
+            return $this->redirectToRoute('property.show', [
+                'id' => $property->getId(),
+                'slug' => $property->getSlug()
+            ], 301);
+        }
 
         return $this->render('property/show.html.twig', [
             'property' => $property,

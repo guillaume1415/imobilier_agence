@@ -4,9 +4,16 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ *  @UniqueEntity(
+ *  fields={"username"},
+ *  message="Le username indiquer et déja utilisé"
+ * )
  */
 class User implements UserInterface,\Serializable
 {
@@ -23,9 +30,20 @@ class User implements UserInterface,\Serializable
     private $username;
 
     /**
+     * @ORM\Column(type="json")
+     */
+    private $roles = [];
+
+    /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min="1",minMessage="votre mot de passe est trop court 8 caractre minimun")
      */
     private $password;
+
+    /**
+     * @Assert\EqualTo(propertyPath="password",message="votre comfirmation mot de passe n'est pas valide")
+     */
+    public $confirme_password;
 
     public function getId(): ?int
     {
@@ -70,9 +88,20 @@ class User implements UserInterface,\Serializable
      *
      * @return (Role|string)[] The user roles
      */
-    public function getRoles()
+    public function getRoles(): array
     {
-        return ['ROLE_USER'];
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
     }
 
     /**
